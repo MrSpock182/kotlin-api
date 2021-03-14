@@ -21,7 +21,7 @@ class AutenticacaoViaTokenFilter(
         val token = recuperarToken(request)
         val valido: Boolean = tokenService.isTokenValido(token)
 
-        if(valido) {
+        if (valido) {
             autenticarCliente(token)
         }
 
@@ -32,19 +32,21 @@ class AutenticacaoViaTokenFilter(
         val idUsuario: Long = tokenService.getIdUsuario(token)
         val optional: Optional<Usuario> = repository.findById(idUsuario)
 
-        if(optional.isEmpty) {
+        if (optional.isEmpty) {
             throw NotFoundException("Usuário não encontrado")
         }
 
         val usuario: Usuario = optional.get()
-        val authentication: UsernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(usuario,
-            null, usuario.authorities)
-        SecurityContextHolder.getContext().authentication = authentication
+        SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(
+            usuario,
+            null,
+            usuario.authorities
+        )
     }
 
-    private fun recuperarToken(request: HttpServletRequest) : String? {
+    private fun recuperarToken(request: HttpServletRequest): String? {
         val token: String? = request.getHeader("Authorization")
-        if(token == null || token.isEmpty() || !token.startsWith("Bearer ")) {
+        if (token == null || token.isEmpty() || !token.startsWith("Bearer ")) {
             return null
         }
         return token.substring(7, token.length)

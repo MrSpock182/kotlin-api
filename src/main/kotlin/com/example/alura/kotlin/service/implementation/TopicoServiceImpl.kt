@@ -65,14 +65,14 @@ class TopicoServiceImpl(
         val value = optional.get()
         val topico: Topico = topicoRepository.save(
             Topico(
-                id = value.id,
                 titulo = request.titulo,
                 mensagem = request.mensagem,
                 dataCriacao = value.dataCriacao,
                 status = value.status,
                 autor = value.autor,
                 curso = value.curso,
-                respostas = value.respostas
+                respostas = value.respostas,
+                id = value.id
             )
         )
         return adapterOrm.cast(topico)

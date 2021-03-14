@@ -5,28 +5,26 @@ import com.example.alura.kotlin.service.TokenService
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.lang.Exception
 import java.util.*
 
 @Service
 class TokenJwtServiceImpl(
-    @Value("alura.jwt.expiration") private val expiration: String,
-    @Value("alura.jwt.secret") private val secret: String
+    @Value(value = "\${alura.jwt.expiration}") private val expiration: String,
+    @Value(value = "\${alura.jwt.secret}") private val secret: String
 ) : TokenService {
 
-    override fun gerarToken(auth: Authentication): String {
-        val logado = auth.principal as Usuario
+    override fun gerarToken(usuario: Usuario): String {
         val hoje = Date()
         val dataExpiracao = Date(hoje.time + expiration.toLong())
 
         return Jwts.builder()
             .setIssuer("API do Fórum da Alura")
-            .setSubject(logado.id.toString())
+            .setSubject(usuario.id.toString())
             .setIssuedAt(hoje)
             .setExpiration(dataExpiracao)
-            .signWith(SignatureAlgorithm.HS256, secret)
+            .signWith(SignatureAlgorithm.HS512, Base64.getEncoder().encodeToString(secret.toByteArray()))
             .compact()
     }
 

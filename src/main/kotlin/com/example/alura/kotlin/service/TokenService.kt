@@ -1,9 +1,9 @@
 package com.example.alura.kotlin.service
 
-import org.springframework.security.core.Authentication
+import com.example.alura.kotlin.repository.orm.Usuario
 
 interface TokenService {
-    fun gerarToken(auth: Authentication) : String
+    fun gerarToken(usuario: Usuario) : String
     fun isTokenValido(token: String?) : Boolean
     fun getIdUsuario(token: String?) : Long
 }

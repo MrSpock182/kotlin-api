@@ -16,10 +16,11 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import java.lang.Exception
+import kotlin.jvm.Throws
 
 @Configuration
 @EnableWebSecurity
-@Profile(value = ["prod", "test"])
 class SecurityConfiguration(
     private val tokenService: TokenService,
     private val usuarioService: UserDetailsService,
@@ -43,6 +44,7 @@ class SecurityConfiguration(
             .antMatchers(HttpMethod.GET, "/topicos").permitAll()
             .antMatchers(HttpMethod.GET, "/topicos/*").permitAll()
             .antMatchers(HttpMethod.POST, "/auth").permitAll()
+            .antMatchers(HttpMethod.POST, "/save").permitAll()
             .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
             .antMatchers(HttpMethod.DELETE, "/topicos/*").hasRole("MODERADOR")
             .anyRequest().authenticated()
